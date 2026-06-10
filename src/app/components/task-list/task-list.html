@@ -1,0 +1,163 @@
+<div class="wrap">
+  <button class="add-btn" (click)="openAdd()">+ Add Task</button>
+
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input
+      class="search-input"
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Search tasks by title or description..."
+    />
+    @if (searchQuery) {
+      <button class="search-clear" (click)="searchQuery = ''" title="Clear">✕</button>
+    }
+  </div>
+
+  <div class="filters">
+    <button [class.active]="filter === 'All'"         (click)="filter = 'All'">All</button>
+    <button [class.active]="filter === 'Todo'"        (click)="filter = 'Todo'">Todo</button>
+    <button [class.active]="filter === 'In Progress'" (click)="filter = 'In Progress'">In Progress</button>
+    <button [class.active]="filter === 'Done'"        (click)="filter = 'Done'">Done</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="sortable" (click)="toggleSort()">
+          Title {{ sortDir === 'asc' ? '↑' : sortDir === 'desc' ? '↓' : '↕' }}
+        </th>
+        <th>Description</th>
+        <th>Due Date</th>
+        <th>Status</th>
+        <th class="actions-th">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (filtered().length === 0) {
+        <tr><td colspan="5" class="empty">No tasks found.</td></tr>
+      }
+      @for (task of filtered(); track task.id) {
+        <tr>
+          <td>{{ task.title }}</td>
+          <td>{{ task.description }}</td>
+          <td>
+            @if (task.dueDate) {
+              <span class="due-pill" [class.overdue]="isOverdue(task)">{{ formatDate(task.dueDate) }}</span>
+            } @else {
+              <span class="due-empty">—</span>
+            }
+          </td>
+          <td><span class="status-pill" [attr.data-status]="task.status">{{ task.status }}</span></td>
+          <td class="actions-td">
+            <div class="actions-row">
+              <button (click)="openEdit(task.id)">Edit</button>
+              <button class="delete" (click)="taskSvc.delete(task.id)">Delete</button>
+              <button class="help-btn" (click)="openHelp(task)">Help</button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <!-- Archive -->
+  @if (taskSvc.archivedCount() > 0) {
+    <div class="archive-section">
+      <div class="archive-header" (click)="archiveOpen = !archiveOpen">
+        <span class="chevron">{{ archiveOpen ? '▼' : '▶' }}</span>
+        <h2>Archive</h2>
+        <span class="badge">{{ taskSvc.archivedCount() }}</span>
+      </div>
+      @if (archiveOpen) {
+        <table class="archive-table">
+          <thead>
+            <tr>
+              <th>Title</th><th>Description</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (task of taskSvc.archived(); track task.id) {
+              <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                <td>{{ task.status }}</td>
+                <td><button class="restore" (click)="taskSvc.restore(task.id)">Restore</button></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+</div>
+
+<!-- Add / Edit form -->
+@if (formOpen) {
+  <div class="overlay">
+    <div class="form-box">
+      <h2>{{ editingId === null ? 'Add Task' : 'Edit Task' }}</h2>
+      <div>
+        <label>Title</label>
+        <input [(ngModel)]="titleInput" placeholder="Task title" />
+      </div>
+      <div>
+        <label>Description</label>
+        <textarea [(ngModel)]="descInput" placeholder="Description"></textarea>
+      </div>
+      <div>
+        <label>Due Date <span class="optional">(optional)</span></label>
+        <input type="date" [(ngModel)]="dueDateInput" />
+      </div>
+      @if (editingId !== null) {
+        <div>
+          <label>Status</label>
+          <select [(ngModel)]="statusInput">
+            <option>Todo</option>
+            <option>In Progress</option>
+            <option>Done</option>
+          </select>
+        </div>
+      }
+      <div class="form-actions">
+        <button class="cancel" (click)="formOpen = false">Cancel</button>
+        <button class="save" (click)="saveTask()">Save</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Help modal -->
+@if (helpOpen()) {
+  <div class="overlay" (click)="closeHelp()">
+    <div class="help-box" (click)="$event.stopPropagation()">
+      <div class="help-header">
+        <div>
+          <p class="help-label">AI Help</p>
+          <h2>{{ helpTaskTitle() }}</h2>
+        </div>
+        <button class="close-btn" (click)="closeHelp()">✕</button>
+      </div>
+      <div class="help-body">
+        @if (helpLoading()) {
+          <div class="help-loading">
+            <span class="spinner"></span>
+            <div>
+              <div>Getting help…</div>
+              <div class="help-loading-sub">First request can take up to 30 seconds while the AI service wakes up.</div>
+            </div>
+          </div>
+        } @else {
+          <iframe class="help-response" [src]="helpUrl()" sandbox="allow-same-origin"></iframe>
+        }
+      </div>
+      @if (!helpLoading()) {
+        <div class="help-footer">
+          <button class="cancel" (click)="closeHelp()">Close</button>
+          <button class="save" (click)="fetchHelp()">Retry</button>
+        </div>
+      }
+    </div>
+  </div>
+}
+

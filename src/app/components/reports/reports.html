@@ -1,0 +1,46 @@
+<div class="reports-page">
+  <div class="reports-header">
+    <h1>Reports</h1>
+    <a routerLink="/tasks" class="back-link">← Back to Tasks</a>
+  </div>
+
+  <div class="reports-grid">
+
+    <!-- Export -->
+    <section class="card">
+      <h2>📤 Export</h2>
+      <p class="card-sub">Download all your tasks (including archived) in your preferred format.</p>
+
+      <div class="summary">
+        <div><strong>{{ taskSvc.totalCount() }}</strong><span>Active</span></div>
+        <div><strong>{{ taskSvc.archivedCount() }}</strong><span>Archived</span></div>
+        <div><strong>{{ taskSvc.totalCount() + taskSvc.archivedCount() }}</strong><span>Total</span></div>
+      </div>
+
+      <div class="actions">
+        <button class="export-btn xlsx" (click)="exportXlsx()">⬇ Download as XLSX</button>
+        <button class="export-btn csv"  (click)="exportCsv()">⬇ Download as CSV</button>
+      </div>
+    </section>
+
+    <!-- Import -->
+    <section class="card">
+      <h2>📥 Import</h2>
+      <p class="card-sub">Upload an XLSX or CSV file. Required column: <code>title</code>. Optional: <code>description</code>, <code>status</code>, <code>dueDate</code> (YYYY-MM-DD).</p>
+
+      <label class="file-drop">
+        <input type="file" accept=".xlsx,.xls,.csv" (change)="onFilePicked($event)" hidden />
+        <div class="file-drop-inner">
+          <div class="file-icon">📁</div>
+          <div><strong>Click to choose a file</strong></div>
+          <div class="file-hint">Accepts .xlsx, .xls, .csv</div>
+        </div>
+      </label>
+
+      @if (importMessage()) {
+        <div class="import-msg" [class.error]="importError()">{{ importMessage() }}</div>
+      }
+    </section>
+
+  </div>
+</div>

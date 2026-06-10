@@ -1,0 +1,3 @@
+:host { display: contents; }
+
+.layout { display: flex; gap: 28px; max-width: 1400px; margin: 28px auto 0; padding: 0 32px 48px; align-items: flex-start; }

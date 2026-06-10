@@ -1,0 +1,55 @@
+<div class="topbar">
+  <a routerLink="/tasks" class="brand-link"><h1>Task Manager</h1></a>
+  <div class="topbar-right">
+
+    <nav class="nav-links">
+      <a routerLink="/tasks"   routerLinkActive="active" class="nav-link">Tasks</a>
+      <a routerLink="/reports" routerLinkActive="active" class="nav-link">Reports</a>
+    </nav>
+
+    <div class="user-menu-wrap">
+      <button class="user-btn" (click)="userMenuOpen = !userMenuOpen">
+        <span class="user-avatar">{{ auth.currentUser()?.name?.charAt(0)?.toUpperCase() }}</span>
+        <span class="user-name">{{ auth.currentUser()?.name }}</span>
+        <span class="chevron-down">▾</span>
+      </button>
+
+      @if (userMenuOpen) {
+        <div class="user-dropdown">
+          <div class="user-dropdown-info">
+            <strong>{{ auth.currentUser()?.name }}</strong>
+            <span>{{ auth.currentUser()?.email }}</span>
+          </div>
+          <hr class="dropdown-divider" />
+          <button class="dropdown-item" (click)="logout(); userMenuOpen = false">
+            <span>↩</span> Sign Out
+          </button>
+          <button class="dropdown-item danger" (click)="confirmDelete = true; userMenuOpen = false">
+            <span>🗑</span> Delete Account & Data
+          </button>
+        </div>
+        <div class="dropdown-backdrop" (click)="userMenuOpen = false"></div>
+      }
+    </div>
+
+    <button class="toggle" (click)="aboutOpen = true">About</button>
+    <button class="toggle" (click)="theme.toggle()">{{ theme.dark() ? '☀️ Light' : '🌙 Dark' }}</button>
+  </div>
+</div>
+
+<app-about [open]="aboutOpen" (close)="aboutOpen = false" />
+
+<!-- Delete account confirmation -->
+@if (confirmDelete) {
+  <div class="overlay">
+    <div class="confirm-box">
+      <div class="confirm-icon">🗑</div>
+      <h2>Delete Account?</h2>
+      <p>This will permanently delete your account and all your tasks. This cannot be undone.</p>
+      <div class="form-actions">
+        <button class="cancel" (click)="confirmDelete = false">Cancel</button>
+        <button class="danger-btn" (click)="deleteAccount()">Yes, Delete Everything</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,78 @@
+:host { display: block; }
+
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 250;
+}
+
+.about-box {
+  position: relative;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+  border-radius: 24px;
+  padding: 36px 32px;
+  width: 90vw; max-width: 460px;
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;
+}
+:host-context(.dark) .about-box { background: rgba(30,41,59,0.82); border-color: rgba(255,255,255,0.08); }
+
+.close-btn {
+  position: absolute; top: 14px; right: 14px;
+  background: none; border: none; font-size: 1rem; cursor: pointer;
+  color: #aaa; padding: 4px 10px; border-radius: 6px;
+}
+.close-btn:hover { color: #ef4444; background: #fee2e2; }
+
+.about-logo {
+  width: 64px; height: 64px; background: #6366f1; border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; color: white; margin-bottom: 4px;
+}
+
+h1 { font-size: 1.6rem; color: #111; margin: 0; }
+:host-context(.dark) h1 { color: #f1f5f9; }
+
+.version { font-size: 0.82rem; color: #6366f1; font-weight: 600; letter-spacing: 0.06em; margin-top: -4px; }
+
+.tagline { font-size: 0.95rem; color: #555; line-height: 1.5; margin: 6px 0 4px; }
+:host-context(.dark) .tagline { color: #94a3b8; }
+
+.features {
+  width: 100%;
+  display: flex; flex-direction: column; gap: 8px;
+  margin: 12px 0;
+  padding: 16px;
+  background: rgba(248,250,252,0.7);
+  border-radius: 12px;
+}
+:host-context(.dark) .features { background: rgba(15,23,42,0.5); }
+
+.feature {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.88rem; color: #333; text-align: left;
+}
+:host-context(.dark) .feature { color: #cbd5e1; }
+
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #6366f1; flex-shrink: 0;
+}
+
+.tech {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
+  margin-top: 4px;
+}
+.tech span {
+  background: #eef2ff; color: #4f46e5;
+  font-size: 0.72rem; font-weight: 600;
+  padding: 4px 10px; border-radius: 20px;
+}
+:host-context(.dark) .tech span { background: #1e1b4b; color: #818cf8; }
+
+.credit { font-size: 0.78rem; color: #888; margin-top: 10px; }
+:host-context(.dark) .credit { color: #64748b; }

@@ -1,0 +1,8 @@
+<div class="sidebar">
+  <h2>Summary</h2>
+  <div class="stat"><span>Total</span>       <strong>{{ taskSvc.totalCount() }}</strong></div>
+  <div class="stat"><span>Todo</span>        <strong>{{ taskSvc.todoCount() }}/{{ taskSvc.totalCount() }}</strong></div>
+  <div class="stat"><span>In Progress</span> <strong>{{ taskSvc.inProgressCount() }}/{{ taskSvc.totalCount() }}</strong></div>
+  <div class="stat"><span>Done</span>        <strong>{{ taskSvc.doneCount() }}/{{ taskSvc.totalCount() }}</strong></div>
+  <div class="stat"><span>Archived</span>    <strong>{{ taskSvc.archivedCount() }}</strong></div>
+</div>

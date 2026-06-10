@@ -1,0 +1,47 @@
+<div class="auth-page">
+  <button class="toggle auth-toggle" (click)="theme.toggle()">{{ theme.dark() ? '☀️ Light' : '🌙 Dark' }}</button>
+  <div class="auth-card">
+
+    <div class="auth-logo">✓</div>
+    <div>
+      <h1>Task Manager</h1>
+      <p class="auth-subtitle">{{ authMode === 'signin' ? 'Welcome back' : 'Create your account' }}</p>
+    </div>
+
+    <div class="auth-tabs">
+      <button [class.active]="authMode === 'signin'" (click)="authMode = 'signin'; authError = ''">Sign In</button>
+      <button [class.active]="authMode === 'signup'" (click)="authMode = 'signup'; authError = ''">Sign Up</button>
+    </div>
+
+    @if (authError) {
+      <div class="auth-error">{{ authError }}</div>
+    }
+
+    @if (authMode === 'signup') {
+      <div class="field">
+        <label>Name</label>
+        <input [(ngModel)]="authName" placeholder="Your name" />
+      </div>
+    }
+    <div class="field">
+      <label>Email</label>
+      <input type="email" [(ngModel)]="authEmail" placeholder="you@example.com" />
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" [(ngModel)]="authPassword" placeholder="••••••••"
+        (keyup.enter)="authMode === 'signin' ? signin() : signup()" />
+    </div>
+    @if (authMode === 'signup') {
+      <div class="field">
+        <label>Confirm Password</label>
+        <input type="password" [(ngModel)]="authConfirm" placeholder="••••••••" (keyup.enter)="signup()" />
+      </div>
+    }
+
+    <button class="auth-btn" (click)="authMode === 'signin' ? signin() : signup()" [disabled]="loading">
+      {{ loading ? 'Please wait…' : (authMode === 'signin' ? 'Sign In' : 'Create Account') }}
+    </button>
+
+  </div>
+</div>

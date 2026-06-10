@@ -1,0 +1,36 @@
+:host { display: block; }
+
+.auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.auth-toggle { position: fixed; top: 24px; right: 24px; }
+
+.auth-card { background: white; border-radius: 16px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 20px; }
+:host-context(.dark) .auth-card { background: #1e293b; box-shadow: none; }
+
+.auth-logo { width: 52px; height: 52px; background: #6366f1; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; }
+
+h1 { font-size: 1.6rem; color: #111; }
+:host-context(.dark) h1 { color: #f1f5f9; }
+
+.auth-subtitle { color: #888; font-size: 0.9rem; margin-top: 4px; }
+
+.auth-tabs { display: flex; background: #f0f0f0; border-radius: 10px; padding: 4px; gap: 4px; }
+:host-context(.dark) .auth-tabs { background: #0f172a; }
+.auth-tabs button { flex: 1; padding: 8px; border: none; border-radius: 8px; background: none; cursor: pointer; font-size: 0.9rem; color: #888; }
+.auth-tabs button.active { background: white; color: #111; font-weight: 600; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+:host-context(.dark) .auth-tabs button.active { background: #1e293b; color: #f1f5f9; }
+
+.auth-error { background: #fee2e2; color: #dc2626; padding: 10px 14px; border-radius: 8px; font-size: 0.875rem; }
+:host-context(.dark) .auth-error { background: #450a0a; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+label { font-size: 0.875rem; color: #555; }
+:host-context(.dark) label { color: #94a3b8; }
+input { width: 100%; padding: 10px 12px; font-size: 1rem; border-radius: 8px; border: 2px solid #ddd; outline: none; background: white; color: #111; font-family: sans-serif; }
+input:focus { border-color: #6366f1; }
+:host-context(.dark) input { border-color: #334155; background: #0f172a; color: #f1f5f9; }
+
+.auth-btn { width: 100%; padding: 12px; background: #6366f1; color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+.auth-btn:hover { background: #4f46e5; }
+
+.toggle { background: none; border: 2px solid #ddd; border-radius: 20px; padding: 6px 16px; cursor: pointer; font-size: 0.95rem; }
+:host-context(.dark) .toggle { border-color: #334155; color: #94a3b8; }
