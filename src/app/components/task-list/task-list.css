@@ -47,6 +47,41 @@
 .card-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .task-card .actions-row { align-self: flex-start; margin-top: 4px; }
 
+/* Pagination */
+.pager {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+:host-context(.dark) .pager {
+  background: rgba(30, 41, 59, 0.55);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+.pager-info { color: #475569; }
+:host-context(.dark) .pager-info { color: #cbd5e1; }
+.pager-info { font-size: 0.82rem; color: #888; }
+:host-context(.dark) .pager-info { color: #64748b; }
+.pager-controls { display: inline-flex; gap: 4px; }
+.pager-controls button {
+  min-width: 34px; padding: 6px 10px; border: 1px solid #ddd; background: white; color: #555;
+  border-radius: 8px; cursor: pointer; font-size: 0.85rem;
+}
+.pager-controls button:hover:not(:disabled) { border-color: #6366f1; color: #6366f1; }
+.pager-controls button.active { background: #6366f1; border-color: #6366f1; color: white; font-weight: 600; }
+.pager-controls button:disabled { opacity: 0.4; cursor: not-allowed; }
+:host-context(.dark) .pager-controls button { background: #1e293b; border-color: #334155; color: #94a3b8; }
+:host-context(.dark) .pager-controls button:hover:not(:disabled) { border-color: #6366f1; color: #818cf8; }
+:host-context(.dark) .pager-controls button.active { background: #6366f1; border-color: #6366f1; color: white; }
+.pager-size { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: #888; }
+:host-context(.dark) .pager-size { color: #64748b; }
+.pager-size select { padding: 5px 8px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #111; cursor: pointer; font-size: 0.82rem; }
+:host-context(.dark) .pager-size select { background: #0f172a; border-color: #334155; color: #f1f5f9; }
+
 .filters { display: flex; gap: 8px; }
 .filters button { padding: 7px 16px; border-radius: 20px; cursor: pointer; font-size: 0.875rem; border: 2px solid #ddd; background: white; color: #555; }
 .filters button.active { border-color: #6366f1; color: #6366f1; background: #eef2ff; }

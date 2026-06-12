@@ -105,6 +105,7 @@ export class TaskListComponent {
     if (this.sortDir === null)       this.sortDir = 'asc';
     else if (this.sortDir === 'asc') this.sortDir = 'desc';
     else                             this.sortDir = null;
+    this.resetPage();
   }
 
   filtered() { return this.taskSvc.filtered(this.filter, this.sortDir, this.searchQuery); }
@@ -113,6 +114,56 @@ export class TaskListComponent {
     this.view = v;
     localStorage.setItem('taskView', v);
   }
+
+  // ── Pagination ──
+  pageSize = 10;            // 0 = "All"
+  currentPage = 1;
+
+  /** Reset to the first page (call when filter/search/sort/page-size changes). */
+  resetPage() { this.currentPage = 1; }
+
+  private effectiveSize(): number {
+    return this.pageSize === 0 ? Math.max(1, this.filtered().length) : this.pageSize;
+  }
+
+  totalPages(): number {
+    return Math.max(1, Math.ceil(this.filtered().length / this.effectiveSize()));
+  }
+
+  /** currentPage clamped into the valid [1, totalPages] range. */
+  clampedPage(): number {
+    return Math.min(Math.max(1, this.currentPage), this.totalPages());
+  }
+
+  /** Just the tasks for the current page. */
+  paged(): Task[] {
+    const all = this.filtered();
+    if (this.pageSize === 0) return all;
+    const start = (this.clampedPage() - 1) * this.pageSize;
+    return all.slice(start, start + this.pageSize);
+  }
+
+  /** A small window of page numbers to render as buttons. */
+  pageNumbers(): number[] {
+    const total = this.totalPages();
+    const cur = this.clampedPage();
+    const max = 5;
+    let start = Math.max(1, cur - Math.floor(max / 2));
+    const end = Math.min(total, start + max - 1);
+    start = Math.max(1, end - max + 1);
+    const arr: number[] = [];
+    for (let i = start; i <= end; i++) arr.push(i);
+    return arr;
+  }
+
+  rangeStart(): number {
+    return this.filtered().length === 0 ? 0 : (this.clampedPage() - 1) * this.effectiveSize() + 1;
+  }
+  rangeEnd(): number {
+    return Math.min(this.filtered().length, this.clampedPage() * this.effectiveSize());
+  }
+  prevPage() { if (this.clampedPage() > 1) this.currentPage = this.clampedPage() - 1; }
+  nextPage() { if (this.clampedPage() < this.totalPages()) this.currentPage = this.clampedPage() + 1; }
 
   /** The exact color of a task's assigned type, or null if it has none. */
   typeColor(task: Task): string | null {

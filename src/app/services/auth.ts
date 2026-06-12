@@ -2,7 +2,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
-const API = 'http://localhost:3000';
+const API = 'https://tasks-api-z2qk.onrender.com';//'http://localhost:3000';
 
 export interface User {
   id: number;

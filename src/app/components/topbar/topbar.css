@@ -1,6 +1,20 @@
 :host { display: block; }
 
-.topbar { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; padding: 28px 32px 0; }
+/* Frosted-glass bar so text is readable over the wallpaper. */
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  max-width: 1400px; margin: 16px auto 0; padding: 14px 24px;
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
+}
+:host-context(.dark) .topbar {
+  background: rgba(15, 23, 42, 0.55);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
 .topbar-right { display: flex; align-items: center; gap: 12px; }
 
 .brand-link { text-decoration: none; }

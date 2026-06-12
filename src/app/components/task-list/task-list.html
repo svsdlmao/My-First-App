@@ -7,19 +7,20 @@
       class="search-input"
       type="text"
       [(ngModel)]="searchQuery"
+      (ngModelChange)="resetPage()"
       placeholder="Search tasks by title or description..."
     />
     @if (searchQuery) {
-      <button class="search-clear" (click)="searchQuery = ''" title="Clear">✕</button>
+      <button class="search-clear" (click)="searchQuery = ''; resetPage()" title="Clear">✕</button>
     }
   </div>
 
   <div class="toolbar">
     <div class="filters">
-      <button [class.active]="filter === 'All'"         (click)="filter = 'All'">All</button>
-      <button [class.active]="filter === 'Todo'"        (click)="filter = 'Todo'">Todo</button>
-      <button [class.active]="filter === 'In Progress'" (click)="filter = 'In Progress'">In Progress</button>
-      <button [class.active]="filter === 'Done'"        (click)="filter = 'Done'">Done</button>
+      <button [class.active]="filter === 'All'"         (click)="filter = 'All'; resetPage()">All</button>
+      <button [class.active]="filter === 'Todo'"        (click)="filter = 'Todo'; resetPage()">Todo</button>
+      <button [class.active]="filter === 'In Progress'" (click)="filter = 'In Progress'; resetPage()">In Progress</button>
+      <button [class.active]="filter === 'Done'"        (click)="filter = 'Done'; resetPage()">Done</button>
     </div>
     <div class="view-toggle">
       <button [class.active]="view === 'list'" (click)="setView('list')" title="List view">☰</button>
@@ -44,7 +45,7 @@
       @if (filtered().length === 0) {
         <tr><td colspan="5" class="empty">No tasks found.</td></tr>
       }
-      @for (task of filtered(); track task.id) {
+      @for (task of paged(); track task.id) {
         <tr [style.background]="typeColor(task)"
             [style.color]="textColor(task)"
             [title]="typeName(task)">
@@ -75,7 +76,7 @@
       <p class="grid-empty">No tasks found.</p>
     }
     <div class="grid">
-      @for (task of filtered(); track task.id) {
+      @for (task of paged(); track task.id) {
         <div class="task-card"
              [style.background]="typeColor(task)"
              [style.color]="textColor(task)"
@@ -97,6 +98,29 @@
           </div>
         </div>
       }
+    </div>
+  }
+
+  <!-- Pagination -->
+  @if (filtered().length > 0) {
+    <div class="pager">
+      <span class="pager-info">Showing {{ rangeStart() }}–{{ rangeEnd() }} of {{ filtered().length }}</span>
+      <div class="pager-controls">
+        <button (click)="prevPage()" [disabled]="clampedPage() === 1" title="Previous">‹</button>
+        @for (p of pageNumbers(); track p) {
+          <button [class.active]="p === clampedPage()" (click)="currentPage = p">{{ p }}</button>
+        }
+        <button (click)="nextPage()" [disabled]="clampedPage() === totalPages()" title="Next">›</button>
+      </div>
+      <div class="pager-size">
+        <label>Per page</label>
+        <select [(ngModel)]="pageSize" (ngModelChange)="resetPage()">
+          <option [ngValue]="5">5</option>
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="20">20</option>
+          <option [ngValue]="0">All</option>
+        </select>
+      </div>
     </div>
   }
 

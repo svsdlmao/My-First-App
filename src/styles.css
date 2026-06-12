@@ -1,3 +1,25 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { min-height: 100vh; background: #f5f5f5; transition: background 0.2s; }
-html.dark, body.dark { background: #0f172a; }
+
+html, body { min-height: 100vh; }
+
+/* Light mode wallpaper (B&W collage). The gradient is a subtle scrim so text
+   over empty areas stays readable; the cards/tables are opaque on top. */
+body {
+  background-color: #f5f5f5;
+  background-image:
+    linear-gradient(rgba(245, 245, 245, 0.4), rgba(245, 245, 245, 0.4)),
+    url('/bg-light.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  transition: background-color 0.2s;
+}
+
+/* Dark mode wallpaper (colorful doodles on dark). */
+body.dark {
+  background-color: #0f172a;
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.45)),
+    url('/bg-dark.jpg');
+}
