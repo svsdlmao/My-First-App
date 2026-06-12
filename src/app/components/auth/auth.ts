@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth';
 import { TaskService } from '../../services/task';
+import { TaskTypeService } from '../../services/task-type';
 import { ThemeService } from '../../services/theme';
 
 @Component({
@@ -19,20 +20,20 @@ export class AuthComponent {
   authError = '';
   loading = false;
 
-  constructor(public auth: AuthService, public theme: ThemeService, private taskSvc: TaskService) {}
+  constructor(public auth: AuthService, public theme: ThemeService, private taskSvc: TaskService, private typeSvc: TaskTypeService) {}
 
   async signup() {
     this.loading = true;
     this.authError = await this.auth.signup(this.authName, this.authEmail, this.authPassword, this.authConfirm);
     this.loading = false;
-    if (!this.authError) { this.taskSvc.load(); this.reset(); }
+    if (!this.authError) { this.taskSvc.load(); this.typeSvc.load(); this.reset(); }
   }
 
   async signin() {
     this.loading = true;
     this.authError = await this.auth.signin(this.authEmail, this.authPassword);
     this.loading = false;
-    if (!this.authError) { this.taskSvc.load(); this.reset(); }
+    if (!this.authError) { this.taskSvc.load(); this.typeSvc.load(); this.reset(); }
   }
 
   private reset() {

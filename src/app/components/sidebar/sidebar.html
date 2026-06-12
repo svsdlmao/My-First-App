@@ -5,4 +5,26 @@
   <div class="stat"><span>In Progress</span> <strong>{{ taskSvc.inProgressCount() }}/{{ taskSvc.totalCount() }}</strong></div>
   <div class="stat"><span>Done</span>        <strong>{{ taskSvc.doneCount() }}/{{ taskSvc.totalCount() }}</strong></div>
   <div class="stat"><span>Archived</span>    <strong>{{ taskSvc.archivedCount() }}</strong></div>
+
+  <!-- ── Type legend (under the summary) ── -->
+  <div class="legend">
+    <h2>Types</h2>
+
+    @if (typeSvc.types().length === 0) {
+      <p class="legend-empty">No types yet — add one below.</p>
+    }
+    @for (type of typeSvc.types(); track type.id) {
+      <div class="legend-item">
+        <span class="legend-dot" [style.background]="type.color"></span>
+        <span class="legend-name">{{ type.name }}</span>
+        <button class="legend-del" (click)="removeType(type.id)" title="Delete type">✕</button>
+      </div>
+    }
+
+    <div class="add-type">
+      <input class="type-color" type="color" [(ngModel)]="newTypeColor" title="Pick a color" />
+      <input class="type-name" [(ngModel)]="newTypeName" placeholder="New type…" (keyup.enter)="addType()" />
+      <button class="type-add" (click)="addType()" [disabled]="adding || !newTypeName.trim()">Add</button>
+    </div>
+  </div>
 </div>

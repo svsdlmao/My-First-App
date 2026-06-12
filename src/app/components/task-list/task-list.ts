@@ -2,6 +2,7 @@ import { Component, signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TaskService } from '../../services/task';
+import { TaskTypeService } from '../../services/task-type';
 import { ThemeService } from '../../services/theme';
 import type { Task } from '../../services/task';
 
@@ -15,6 +16,7 @@ export class TaskListComponent {
   filter: 'All' | Task['status'] = 'All';
   sortDir: 'asc' | 'desc' | null = null;
   searchQuery = '';
+  view: 'list' | 'grid' = (localStorage.getItem('taskView') as 'list' | 'grid') || 'list';
   archiveOpen = true;
   formOpen = false;
   editingId: number | null = null;
@@ -22,6 +24,7 @@ export class TaskListComponent {
   descInput = '';
   statusInput: Task['status'] = 'Todo';
   dueDateInput = '';
+  typeInput: number | null = null;
 
   private readonly API_URL = 'https://assistai-ezsf.onrender.com/api/ai/help';
   /** Cache: task.id → raw HTML string (from API's `html` field) */
@@ -29,7 +32,7 @@ export class TaskListComponent {
   /** Cache: task.id → which (title,desc) was used so cache invalidates on edit */
   private helpCacheKey = new Map<number, string>();
 
-  constructor(public taskSvc: TaskService, private theme: ThemeService, private sanitizer: DomSanitizer) {
+  constructor(public taskSvc: TaskService, public typeSvc: TaskTypeService, private theme: ThemeService, private sanitizer: DomSanitizer) {
     // Pre-warm the API on app boot. Render free-tier servers sleep when idle,
     // so the 30-second cold start happens in the background instead of when
     // the user actually clicks Help.
@@ -53,7 +56,7 @@ export class TaskListComponent {
   // ── Task form ──
   openAdd() {
     this.editingId = null;
-    this.titleInput = ''; this.descInput = ''; this.statusInput = 'Todo'; this.dueDateInput = '';
+    this.titleInput = ''; this.descInput = ''; this.statusInput = 'Todo'; this.dueDateInput = ''; this.typeInput = null;
     this.formOpen = true;
   }
 
@@ -62,7 +65,7 @@ export class TaskListComponent {
     if (!task) return;
     this.editingId = id;
     this.titleInput = task.title; this.descInput = task.description;
-    this.statusInput = task.status; this.dueDateInput = task.dueDate ?? '';
+    this.statusInput = task.status; this.dueDateInput = task.dueDate ?? ''; this.typeInput = task.typeId ?? null;
     this.formOpen = true;
   }
 
@@ -70,9 +73,9 @@ export class TaskListComponent {
     const title = this.titleInput.trim();
     if (!title) { alert('Title is required.'); return; }
     if (this.editingId === null) {
-      this.taskSvc.add(title, this.descInput.trim(), this.statusInput, this.dueDateInput);
+      this.taskSvc.add(title, this.descInput.trim(), this.statusInput, this.dueDateInput, this.typeInput);
     } else {
-      this.taskSvc.update(this.editingId, title, this.descInput.trim(), this.statusInput, this.dueDateInput);
+      this.taskSvc.update(this.editingId, title, this.descInput.trim(), this.statusInput, this.dueDateInput, this.typeInput);
     }
     this.formOpen = false;
   }
@@ -105,6 +108,38 @@ export class TaskListComponent {
   }
 
   filtered() { return this.taskSvc.filtered(this.filter, this.sortDir, this.searchQuery); }
+
+  setView(v: 'list' | 'grid') {
+    this.view = v;
+    localStorage.setItem('taskView', v);
+  }
+
+  /** The exact color of a task's assigned type, or null if it has none. */
+  typeColor(task: Task): string | null {
+    return this.typeSvc.byId(task.typeId)?.color ?? null;
+  }
+
+  /** Black or white text, whichever is readable on the type color. */
+  textColor(task: Task): string | null {
+    const c = this.typeColor(task);
+    if (!c) return null;
+    return this.isLight(c) ? '#111111' : '#ffffff';
+  }
+
+  /** Name of a task's assigned type (for the row tooltip). */
+  typeName(task: Task): string {
+    return this.typeSvc.byId(task.typeId)?.name ?? '';
+  }
+
+  /** Perceived-brightness check so we pick a contrasting text color. */
+  private isLight(hex: string): boolean {
+    const h = hex.replace('#', '');
+    const full = h.length === 3 ? h.split('').map(x => x + x).join('') : h;
+    const r = parseInt(full.substring(0, 2), 16) || 0;
+    const g = parseInt(full.substring(2, 4), 16) || 0;
+    const b = parseInt(full.substring(4, 6), 16) || 0;
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6;
+  }
 
   // ── Help (signals so async updates trigger re-render in zoneless mode) ──
   helpOpen        = signal(false);

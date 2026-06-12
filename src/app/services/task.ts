@@ -12,6 +12,7 @@ export interface Task {
   status: 'Todo' | 'In Progress' | 'Done';
   dueDate?: string | null; // "YYYY-MM-DD" — optional
   archived?: boolean;
+  typeId?: number | null;  // optional reference to a TaskType
 }
 
 interface TasksResponse {
@@ -53,16 +54,16 @@ export class TaskService {
     this.archived.set([]);
   }
 
-  async add(title: string, description: string, status: Task['status'], dueDate = '') {
+  async add(title: string, description: string, status: Task['status'], dueDate = '', typeId: number | null = null) {
     const created = await firstValueFrom(
-      this.http.post<Task>(`${API}/tasks`, { title, description, status, dueDate: dueDate || null })
+      this.http.post<Task>(`${API}/tasks`, { title, description, status, dueDate: dueDate || null, typeId })
     );
     this.tasks.update(list => [...list, created]);
   }
 
-  async update(id: number, title: string, description: string, status: Task['status'], dueDate = '') {
+  async update(id: number, title: string, description: string, status: Task['status'], dueDate = '', typeId: number | null = null) {
     const updated = await firstValueFrom(
-      this.http.patch<Task>(`${API}/tasks/${id}`, { title, description, status, dueDate: dueDate || null })
+      this.http.patch<Task>(`${API}/tasks/${id}`, { title, description, status, dueDate: dueDate || null, typeId })
     );
     this.tasks.update(list => list.map(t => (t.id === id ? updated : t)));
   }

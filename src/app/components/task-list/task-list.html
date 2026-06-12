@@ -14,13 +14,20 @@
     }
   </div>
 
-  <div class="filters">
-    <button [class.active]="filter === 'All'"         (click)="filter = 'All'">All</button>
-    <button [class.active]="filter === 'Todo'"        (click)="filter = 'Todo'">Todo</button>
-    <button [class.active]="filter === 'In Progress'" (click)="filter = 'In Progress'">In Progress</button>
-    <button [class.active]="filter === 'Done'"        (click)="filter = 'Done'">Done</button>
+  <div class="toolbar">
+    <div class="filters">
+      <button [class.active]="filter === 'All'"         (click)="filter = 'All'">All</button>
+      <button [class.active]="filter === 'Todo'"        (click)="filter = 'Todo'">Todo</button>
+      <button [class.active]="filter === 'In Progress'" (click)="filter = 'In Progress'">In Progress</button>
+      <button [class.active]="filter === 'Done'"        (click)="filter = 'Done'">Done</button>
+    </div>
+    <div class="view-toggle">
+      <button [class.active]="view === 'list'" (click)="setView('list')" title="List view">☰</button>
+      <button [class.active]="view === 'grid'" (click)="setView('grid')" title="Grid view">▦</button>
+    </div>
   </div>
 
+  @if (view === 'list') {
   <table>
     <thead>
       <tr>
@@ -38,7 +45,9 @@
         <tr><td colspan="5" class="empty">No tasks found.</td></tr>
       }
       @for (task of filtered(); track task.id) {
-        <tr>
+        <tr [style.background]="typeColor(task)"
+            [style.color]="textColor(task)"
+            [title]="typeName(task)">
           <td>{{ task.title }}</td>
           <td>{{ task.description }}</td>
           <td>
@@ -60,6 +69,36 @@
       }
     </tbody>
   </table>
+  } @else {
+    <!-- Grid view -->
+    @if (filtered().length === 0) {
+      <p class="grid-empty">No tasks found.</p>
+    }
+    <div class="grid">
+      @for (task of filtered(); track task.id) {
+        <div class="task-card"
+             [style.background]="typeColor(task)"
+             [style.color]="textColor(task)"
+             [title]="typeName(task)">
+          <h3 class="card-title">{{ task.title }}</h3>
+          @if (task.description) {
+            <p class="card-desc">{{ task.description }}</p>
+          }
+          <div class="card-meta">
+            <span class="status-pill" [attr.data-status]="task.status">{{ task.status }}</span>
+            @if (task.dueDate) {
+              <span class="due-pill" [class.overdue]="isOverdue(task)">{{ formatDate(task.dueDate) }}</span>
+            }
+          </div>
+          <div class="actions-row">
+            <button (click)="openEdit(task.id)">Edit</button>
+            <button class="delete" (click)="taskSvc.delete(task.id)">Delete</button>
+            <button class="help-btn" (click)="openHelp(task)">Help</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
 
   <!-- Archive -->
   @if (taskSvc.archivedCount() > 0) {
@@ -82,7 +121,7 @@
                 <td>{{ task.title }}</td>
                 <td>{{ task.description }}</td>
                 <td>{{ task.status }}</td>
-                <td><button class="restore" (click)="taskSvc.restore(task.id)">Restore</button></td>
+                <td><div class="actions-row"><button class="restore" (click)="taskSvc.restore(task.id)">Restore</button></div></td>
               </tr>
             }
           </tbody>
@@ -108,6 +147,15 @@
       <div>
         <label>Due Date <span class="optional">(optional)</span></label>
         <input type="date" [(ngModel)]="dueDateInput" />
+      </div>
+      <div>
+        <label>Type <span class="optional">(optional)</span></label>
+        <select [(ngModel)]="typeInput">
+          <option [ngValue]="null">— None —</option>
+          @for (type of typeSvc.types(); track type.id) {
+            <option [ngValue]="type.id">{{ type.name }}</option>
+          }
+        </select>
       </div>
       @if (editingId !== null) {
         <div>

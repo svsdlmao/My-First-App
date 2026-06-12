@@ -18,6 +18,35 @@
 .search-clear:hover { color: #ef4444; background: #fee2e2; }
 :host-context(.dark) .search-clear:hover { background: #450a0a; }
 
+/* Toolbar: filters on the left, view toggle on the right */
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+/* View toggle */
+.view-toggle { display: inline-flex; gap: 2px; background: #f1f5f9; border-radius: 10px; padding: 3px; }
+:host-context(.dark) .view-toggle { background: #1e293b; }
+.view-toggle button { border: none; background: none; cursor: pointer; font-size: 1rem; line-height: 1; padding: 7px 12px; border-radius: 8px; color: #64748b; }
+.view-toggle button:hover { color: #6366f1; }
+.view-toggle button.active { background: white; color: #6366f1; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+:host-context(.dark) .view-toggle button { color: #94a3b8; }
+:host-context(.dark) .view-toggle button.active { background: #0f172a; color: #818cf8; box-shadow: none; }
+
+/* Grid view */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+.grid-empty { text-align: center; padding: 32px; color: #aaa; }
+:host-context(.dark) .grid-empty { color: #475569; }
+.task-card {
+  display: flex; flex-direction: column; gap: 10px;
+  background: white; color: #111;
+  border-radius: 14px; padding: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  min-height: 130px;
+}
+:host-context(.dark) .task-card { background: #1e293b; color: #cbd5e1; box-shadow: none; }
+.card-title { font-size: 1rem; font-weight: 700; line-height: 1.3; }
+.card-desc { font-size: 0.85rem; line-height: 1.5; opacity: 0.85; flex: 1; }
+.card-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.task-card .actions-row { align-self: flex-start; margin-top: 4px; }
+
 .filters { display: flex; gap: 8px; }
 .filters button { padding: 7px 16px; border-radius: 20px; cursor: pointer; font-size: 0.875rem; border: 2px solid #ddd; background: white; color: #555; }
 .filters button.active { border-color: #6366f1; color: #6366f1; background: #eef2ff; }
@@ -57,15 +86,26 @@ tbody tr:hover { background: #fafbff; }
 .due-empty { color: #cbd5e1; font-size: 0.85rem; }
 :host-context(.dark) .due-empty { color: #475569; }
 .optional { color: #aaa; font-weight: 400; font-size: 0.78rem; }
-td { padding: 14px 18px; border-bottom: 1px solid #f0f0f0; color: #111; font-size: 0.92rem; vertical-align: middle; }
-:host-context(.dark) td { border-bottom-color: #334155; color: #cbd5e1; }
+/* Cells inherit the row's text color so a typed row's contrasting color applies. */
+tbody tr { color: #111; }
+:host-context(.dark) tbody tr { color: #cbd5e1; }
+td { padding: 14px 18px; border-bottom: 1px solid #f0f0f0; color: inherit; font-size: 0.92rem; vertical-align: middle; }
+:host-context(.dark) td { border-bottom-color: #334155; }
 tr:last-child td { border-bottom: none; }
 .empty { text-align: center; padding: 24px; color: #aaa; }
 :host-context(.dark) .empty { color: #475569; }
 
 td.actions-td { white-space: nowrap; }
-td.actions-td .actions-row { display: inline-flex; gap: 6px; justify-content: center; align-items: center; }
-td button {
+/* Neutral "tray" so buttons stay visible on any colored row / card. */
+.actions-row {
+  display: inline-flex; gap: 6px; justify-content: center; align-items: center;
+  background: #ffffff;
+  padding: 5px 7px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+:host-context(.dark) .actions-row { background: #1e293b; box-shadow: 0 1px 4px rgba(0,0,0,0.45); }
+.actions-row button {
   padding: 6px 12px;
   border: 1px solid transparent;
   border-radius: 7px;
@@ -75,23 +115,23 @@ td button {
   white-space: nowrap;
   transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
-td button:active { transform: scale(0.96); }
+.actions-row button:active { transform: scale(0.96); }
 
 /* Edit (default action button) */
-td button:not(.delete):not(.help-btn):not(.restore) { background: transparent; color: #6366f1; border-color: #c7d2fe; }
-td button:not(.delete):not(.help-btn):not(.restore):hover { background: #eef2ff; border-color: #6366f1; }
-:host-context(.dark) td button:not(.delete):not(.help-btn):not(.restore) { color: #818cf8; border-color: #312e81; }
-:host-context(.dark) td button:not(.delete):not(.help-btn):not(.restore):hover { background: #1e1b4b; border-color: #6366f1; }
+.actions-row button:not(.delete):not(.help-btn):not(.restore) { background: transparent; color: #6366f1; border-color: #c7d2fe; }
+.actions-row button:not(.delete):not(.help-btn):not(.restore):hover { background: #eef2ff; border-color: #6366f1; }
+:host-context(.dark) .actions-row button:not(.delete):not(.help-btn):not(.restore) { color: #818cf8; border-color: #312e81; }
+:host-context(.dark) .actions-row button:not(.delete):not(.help-btn):not(.restore):hover { background: #1e1b4b; border-color: #6366f1; }
 
-td button.delete { background: transparent; color: #dc2626; border-color: #fecaca; }
-td button.delete:hover { background: #fef2f2; border-color: #dc2626; }
-:host-context(.dark) td button.delete { color: #f87171; border-color: #7f1d1d; }
-:host-context(.dark) td button.delete:hover { background: #450a0a; border-color: #ef4444; }
+.actions-row button.delete { background: transparent; color: #dc2626; border-color: #fecaca; }
+.actions-row button.delete:hover { background: #fef2f2; border-color: #dc2626; }
+:host-context(.dark) .actions-row button.delete { color: #f87171; border-color: #7f1d1d; }
+:host-context(.dark) .actions-row button.delete:hover { background: #450a0a; border-color: #ef4444; }
 
-td button.restore { background: transparent; color: #16a34a; border-color: #bbf7d0; }
-td button.restore:hover { background: #f0fdf4; border-color: #16a34a; }
-td button.restore:hover { background: #bbf7d0; }
-:host-context(.dark) td button.restore { background: #052e16; color: #4ade80; }
+.actions-row button.restore { background: transparent; color: #16a34a; border-color: #bbf7d0; }
+.actions-row button.restore:hover { background: #f0fdf4; border-color: #16a34a; }
+.actions-row button.restore:hover { background: #bbf7d0; }
+:host-context(.dark) .actions-row button.restore { background: #052e16; color: #4ade80; }
 
 /* Help modal */
 .help-box {
@@ -141,10 +181,10 @@ td button.restore:hover { background: #bbf7d0; }
 :host-context(.dark) .help-footer .cancel { background: #334155; color: #94a3b8; }
 
 /* Help button */
-td button.help-btn { background: transparent; color: #0891b2; border-color: #a5f3fc; }
-td button.help-btn:hover { background: #ecfeff; border-color: #0891b2; }
-:host-context(.dark) td button.help-btn { color: #67e8f9; border-color: #155e75; }
-:host-context(.dark) td button.help-btn:hover { background: #083344; border-color: #06b6d4; }
+.actions-row button.help-btn { background: transparent; color: #0891b2; border-color: #a5f3fc; }
+.actions-row button.help-btn:hover { background: #ecfeff; border-color: #0891b2; }
+:host-context(.dark) .actions-row button.help-btn { color: #67e8f9; border-color: #155e75; }
+:host-context(.dark) .actions-row button.help-btn:hover { background: #083344; border-color: #06b6d4; }
 
 /* Archive */
 .archive-section { margin: 0; padding: 0; }
