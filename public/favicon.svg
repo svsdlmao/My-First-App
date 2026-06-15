@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="#7C4DFF" rx="20"/>
+  <g transform="translate(15, 20)">
+    <!-- Checklist lines -->
+    <rect x="0" y="0" width="70" height="8" fill="#ffffff" rx="2"/>
+    <rect x="0" y="18" width="70" height="8" fill="#ffffff" rx="2"/>
+    <rect x="0" y="36" width="70" height="8" fill="#ffffff" rx="2"/>
+    <rect x="0" y="54" width="70" height="8" fill="#ffffff" rx="2"/>
+    <!-- Checkmarks -->
+    <g stroke="#10b981" stroke-width="3" stroke-linecap="round" fill="none">
+      <polyline points="0,8 3,11 8,6"/>
+      <polyline points="0,26 3,29 8,24"/>
+      <polyline points="0,44 3,47 8,42"/>
+      <polyline points="0,62 3,65 8,60"/>
+    </g>
+  </g>
+</svg>

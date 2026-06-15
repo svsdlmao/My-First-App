@@ -2,6 +2,13 @@
 
 html, body { min-height: 100vh; }
 
+/* Primary brand color for ACTAA Task Manager */
+:root {
+  --primary-blue: #2563eb;
+  --primary-blue-dark: #1d4ed8;
+  --accent-green: #10b981;
+}
+
 /* Light mode wallpaper (B&W collage). The gradient is a subtle scrim so text
    over empty areas stays readable; the cards/tables are opaque on top. */
 body {
