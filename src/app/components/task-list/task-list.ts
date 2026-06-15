@@ -26,7 +26,7 @@ export class TaskListComponent {
   dueDateInput = '';
   typeInput: number | null = null;
 
-  private readonly API_URL = 'https://assistai-ezsf.onrender.com/api/ai/help';
+  private readonly API_URL = 'https://tasks-api-z2qk.onrender.com/api/ai/help';
   /** Cache: task.id → raw HTML string (from API's `html` field) */
   private helpCache = new Map<number, string>();
   /** Cache: task.id → which (title,desc) was used so cache invalidates on edit */
