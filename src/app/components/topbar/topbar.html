@@ -5,6 +5,7 @@
   </a>
   <div class="topbar-right">
 
+    @if (auth.isLoggedIn()) {
     <nav class="nav-links">
       <a routerLink="/tasks"   routerLinkActive="active" class="nav-link">Tasks</a>
       <a routerLink="/reports" routerLinkActive="active" class="nav-link">Reports</a>
@@ -34,6 +35,7 @@
         <div class="dropdown-backdrop" (click)="userMenuOpen = false"></div>
       }
     </div>
+    }
 
     <button class="toggle" (click)="aboutOpen = true">About</button>
     <button class="toggle" (click)="theme.toggle()">{{ theme.dark() ? '☀️ Light' : '🌙 Dark' }}</button>

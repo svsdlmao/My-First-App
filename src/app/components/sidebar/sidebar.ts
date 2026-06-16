@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UpperCasePipe } from '@angular/common';
 import { TaskService } from '../../services/task';
 import { TaskTypeService } from '../../services/task-type';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [FormsModule],
+  imports: [FormsModule, UpperCasePipe],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css'
 })

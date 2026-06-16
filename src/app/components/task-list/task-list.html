@@ -46,7 +46,8 @@
         <tr><td colspan="5" class="empty">No tasks found.</td></tr>
       }
       @for (task of paged(); track task.id) {
-        <tr [style.background]="typeColor(task)"
+        <tr [class.colored]="typeColor(task)"
+            [style.background]="typeColor(task)"
             [style.color]="textColor(task)"
             [title]="typeName(task)">
           <td>{{ task.title }}</td>
@@ -78,6 +79,7 @@
     <div class="grid">
       @for (task of paged(); track task.id) {
         <div class="task-card"
+             [class.colored]="typeColor(task)"
              [style.background]="typeColor(task)"
              [style.color]="textColor(task)"
              [title]="typeName(task)">
