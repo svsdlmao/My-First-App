@@ -36,7 +36,7 @@ export class TaskListComponent {
     // Pre-warm the API on app boot. Render free-tier servers sleep when idle,
     // so the 30-second cold start happens in the background instead of when
     // the user actually clicks Help.
-    fetch(this.API_URL, { method: 'OPTIONS' }).catch(() => {});
+    fetch(this.API_URL, { method: 'OPTIONS' }).catch(() => { });
 
     // Whenever the raw help HTML OR the theme changes, rebuild a themed document
     // and expose it as a Blob URL. We load the iframe from this URL instead of
@@ -102,9 +102,9 @@ export class TaskListComponent {
 
   // ── Sort / filter ──
   toggleSort() {
-    if (this.sortDir === null)       this.sortDir = 'asc';
+    if (this.sortDir === null) this.sortDir = 'asc';
     else if (this.sortDir === 'asc') this.sortDir = 'desc';
-    else                             this.sortDir = null;
+    else this.sortDir = null;
     this.resetPage();
   }
 
@@ -193,11 +193,11 @@ export class TaskListComponent {
   }
 
   // ── Help (signals so async updates trigger re-render in zoneless mode) ──
-  helpOpen        = signal(false);
-  helpLoading     = signal(false);
+  helpOpen = signal(false);
+  helpLoading = signal(false);
   helpRawResponse = signal('');                       // raw HTML from API
-  helpTaskTitle   = signal('');
-  helpUrl         = signal<SafeResourceUrl | null>(null); // Blob URL for the iframe
+  helpTaskTitle = signal('');
+  helpUrl = signal<SafeResourceUrl | null>(null); // Blob URL for the iframe
   private currentBlobUrl: string | null = null;
   private helpTaskId = 0;
   private helpTaskDesc = '';
@@ -250,21 +250,39 @@ export class TaskListComponent {
     }
   }
 
+  async downloadHelp() {
+
+    const rawData = this.helpRawResponse();
+
+    // 3. Convert the data into a downloadable file blob
+    const blob = new Blob([rawData], { type: 'text/html;charset=utf-8' });
+    const link = document.createElement('a');
+
+    link.href = URL.createObjectURL(blob);
+    const currentMs = new Date().getTime();
+    link.download = `aihelp_${currentMs}.html`;
+
+    link.click();
+    URL.revokeObjectURL(link.href);
+
+  }
+
+
   /** Rebuild the API HTML as a clean, theme-matched document for the iframe. */
   private themeWrap(apiHtml: string): string {
     const d = this.theme.dark();
     const c = {
-      bg:        d ? '#0f172a' : '#ffffff',
-      text:      d ? '#cbd5e1' : '#1e293b',
-      heading:   d ? '#f1f5f9' : '#0f172a',
-      thBg:      d ? '#4f46e5' : '#6366f1',
-      thText:    '#ffffff',
-      codeBg:    d ? '#1e1b4b' : '#eef2ff',
-      codeText:  d ? '#818cf8' : '#4f46e5',
-      border:    d ? '#334155' : '#e2e8f0',
-      altRow:    d ? '#1e293b' : '#fafbff',
+      bg: d ? '#0f172a' : '#ffffff',
+      text: d ? '#cbd5e1' : '#1e293b',
+      heading: d ? '#f1f5f9' : '#0f172a',
+      thBg: d ? '#4f46e5' : '#6366f1',
+      thText: '#ffffff',
+      codeBg: d ? '#1e1b4b' : '#eef2ff',
+      codeText: d ? '#818cf8' : '#4f46e5',
+      border: d ? '#334155' : '#e2e8f0',
+      altRow: d ? '#1e293b' : '#fafbff',
       scrollbar: d ? '#334155' : '#cbd5e1',
-      link:      '#6366f1'
+      link: '#6366f1'
     };
 
     // Take ONLY the body's inner content (ignore the API's <head>/<style> entirely),
