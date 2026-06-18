@@ -1,7 +1,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 /* Transparent so the body wallpaper (styles.css) shows behind the content. */
-:host { display: block; min-height: 100vh; background: transparent; font-family: sans-serif; }
+:host { display: block; min-height: 100vh; background: transparent; font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 :host(.dark) { background: transparent; }
 
 .layout { display: flex; gap: 28px; max-width: 1400px; margin: 28px auto 0; padding: 0 32px 48px; align-items: flex-start; }
