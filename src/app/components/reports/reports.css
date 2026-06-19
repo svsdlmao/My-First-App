@@ -12,7 +12,7 @@
 }
 .back-link:hover { background: var(--accent-soft); }
 
-.reports-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.reports-grid { display: flex; justify-content: center; }
 @media (max-width: 800px) { .reports-grid { grid-template-columns: 1fr; } }
 
 .card {
